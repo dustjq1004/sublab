@@ -46,7 +46,7 @@ dependencies {
     /* flexmark dependency */
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8' // 최신 버전 사용
 
-    implementation "org.jsoup:jsoup:1.17.2"
+    implementation "org.jsoup:jsoup:1.23.2"
 
     /* .env file load dependency */
     // .env 파일 설정 의존
