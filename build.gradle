@@ -61,7 +61,7 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"
 
     // 시간 출력 포맷
-    implementation 'org.ocpsoft.prettytime:prettytime:5.0.4.Final'
+    implementation 'org.ocpsoft.prettytime:prettytime:5.0.9.Final'
 
     // jackson format
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2' // 최신 버전 사용
