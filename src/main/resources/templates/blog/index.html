@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index}"
+      layout:fragment="content">
+
+<head>
+    <title>SupLab - Blog</title>
+    <link rel="stylesheet" th:href="@{/css/article.css}">
+    <link rel="stylesheet" th:href="@{/css/blog/skeleton-loading.css}">
+</head>
+<body class="blog-sidebar-page">
+<div class="container my-5 px-xxl-2 pt-4">
+
+    <div class="row flex-lg-row-reverse d-lg-grid content">
+        <div class="offcanvas-body p-4 pt-0 p-lg-2" th:insert="~{blog/blogSidebar}" th:with="articles=${articles}">
+        </div>
+        <div id="main" class="main blog-page-main">
+            <div class="blog-page-shell">
+                <div class="position-relative p-lg-2 mb-3 page-fade-in blog-page-header">
+                    <div class="blog-menu-title">
+                        <span class="blog-menu-quote">"</span>
+                        <span th:if="${menu != null}" class="blog-menu-name" th:text="${menu.name}"></span>
+                        <span th:if="${menu == null}" class="blog-menu-name">전체보기</span>
+                        <span class="blog-menu-quote">"</span>
+                    </div>
+                    <div th:if="${menu != null}" class="blog-menu-sub-title mb-5">
+                        <span th:if="${menu.description != null}" th:text="${menu.description}"></span>
+                        <span th:if="${menu.description == null}" th:text="${wiseSaying}"></span>
+                    </div>
+                    <div th:if="${menu == null}" class="blog-menu-sub-title mb-5">
+                        <span th:text="${wiseSaying}"></span>
+                    </div>
+                </div>
+
+                <div class="row search-container mb-6 page-fade-in blog-page-search">
+                    <div class="col-12 col-md-8 mx-auto">
+                        <div class="blog-search-group">
+                            <input type="text" id="blog-search-input" class="blog-search-input" placeholder="검색어를 입력하세요">
+                            <button type="button" id="blog-search-btn" class="blog-search-btn">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="article-list" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xxl-3 gy-3 gx-2">
+                    <!--                <div class="col" th:each="item : ${articles}">-->
+                    <!--                    <a th:href="@{/blog/{menuName}/{id}(id=${item.id},menuName=${item.menuName})}"-->
+                    <!--                       class="link-offset-2 link-underline link-underline-opacity-0">-->
+                    <!--                        <div class="card border border-0 p-2 rounded-4">-->
+                    <!--                            <svg class="bd-placeholder-img card-img-top rounded-4" width="100%" height="180"-->
+                    <!--                                 xmlns="http://www.w3.org/2000/svg" role="img"-->
+                    <!--                                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>-->
+                    <!--                                <image height="100%" width="100%"-->
+                    <!--                                       preserveAspectRatio="xMidYMid slice"-->
+                    <!--                                       th:href="@{${item.getThumbnailUrl()}}"></image>-->
+
+                    <!--                            </svg>-->
+                    <!--                            <div class="card-body">-->
+                    <!--                                <div class="mb-2">-->
+                    <!--                                    <span class="text-secondary fs-7"-->
+                    <!--                                          th:text="|${#temporals.format(item.createdAt, 'yyyy.MM.dd')}|"></span>-->
+                    <!--                                </div>-->
+                    <!--                                <h5 class="mb-1 text-truncate" th:text="${item.title}">title</h5>-->
+                    <!--                                <p class="card-text text-body-tertiary fs-6 text-truncate" th:utext="${item.subTitle}">-->
+                    <!--                                    sub Title-->
+                    <!--                                </p>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </a>-->
+                    <!--                </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--    <button type="button" class="btn btn-secondary" onclick="location.href='/logout'">로그아웃</button>-->
+
+<script src="/js/token.js"></script>
+<script src="/js/domain/blog/blog.js"></script>
+<script src="/js/domain/blog/blog-sidebar.js"></script>
+<script src="/js/templates/blog-templates.js"></script>
+<script src="/js/templates/skeleton-templates.js"></script>
+</body>

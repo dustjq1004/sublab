@@ -1,0 +1,106 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: optional:file:.env[.properties]
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+  messages:
+    basename: message/errors
+    encoding: UTF-8
+
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
+
+  jpa:
+    # 전송 쿼리 확인
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+
+    # 테이블 생성 후에 data.sql 실행
+    defer-datasource-initialization: true
+
+  datasource:
+    url: jdbc:h2:mem:test
+    user: sa
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:local-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:local-client-secret}
+            scope:
+              - email
+              - profile
+
+  devtools:
+    livereload:
+      enabled: true
+    thymeleaf:
+      cache: false
+    restart:
+      enabled: true
+
+
+server:
+  shutdown: graceful
+  servlet:
+    session:
+      # 어플리케이션 재 build시 세션 유지 여부 설정
+      persistent: false
+
+jwt:
+  issuer: ${JWT_ISSUER:admin@example.com}
+  secret_key: ${JWT_SECRET_KEY:local-only-jwt-signing-key-not-for-production}
+
+admin:
+  email: ${ADMIN_EMAIL:admin@example.com}
+
+cloud:
+  aws:
+    region: ap-northeast-2
+    credentials:
+      access-key: ${AWS_ACCESS_KEY:local-access-key}
+      secret-key: ${AWS_SECRET_KEY:local-secret-key}
+  s3:
+    bucket: ${S3_BUCKET:local-bucket}
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug # logger 방식 로그
+        orm:
+          jdbc:
+            bind: trace
+
+management:
+  server:
+    port: 8080
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name:suplab}

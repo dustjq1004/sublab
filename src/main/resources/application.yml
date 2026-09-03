@@ -1,0 +1,13 @@
+spring:
+  config:
+    import:
+      # - classpath:/yaml/application-prod.yml
+      - classpath:/yaml/application-dev.yml
+      - classpath:/yaml/application-log.yml
+      - classpath:/yaml/application-test.yml
+      - classpath:/yaml/application-local.yml
+  profiles:
+    group:
+      local: local
+      logging: dev, log
+      test: test

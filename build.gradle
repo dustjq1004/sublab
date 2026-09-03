@@ -1,0 +1,95 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'me.kimyeonsup'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' } // JitPack 추가
+}
+
+jar {
+    enabled = false
+}
+
+dependencies {
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+    /* common mark dependency*/
+    implementation 'org.commonmark:commonmark-ext-gfm-tables:0.24.0'
+    implementation 'org.commonmark:commonmark:0.24.0'
+    implementation "org.commonmark:commonmark-ext-gfm-strikethrough:0.24.0"
+    implementation "org.commonmark:commonmark-ext-task-list-items:0.24.0"
+    implementation "org.commonmark:commonmark-ext-autolink:0.24.0"
+
+    /* flexmark dependency */
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8' // 최신 버전 사용
+
+    implementation "org.jsoup:jsoup:1.17.2"
+
+    /* .env file load dependency */
+    // .env 파일 설정 의존
+    // implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+    implementation "me.paulschwarz:spring-dotenv:4.0.0"
+
+    implementation 'software.amazon.awssdk:s3:2.17.285'
+    implementation 'com.h2database:h2'
+
+
+    //swagger
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"
+
+    // 시간 출력 포맷
+    implementation 'org.ocpsoft.prettytime:prettytime:5.0.4.Final'
+
+    // jackson format
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2' // 최신 버전 사용
+
+    // .env 파일 설정 의존
+    // implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+    implementation "me.paulschwarz:spring-dotenv:4.0.0"
+
+
+    testRuntimeOnly('com.h2database:h2')
+
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    //  runtimeOnly('mysql:mysql-connector-java')
+    //  runtimeOnly('com.h2database:h2')
+
+    testRuntimeOnly('com.h2database:h2')
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.projectlombok:lombok'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "spring.profiles.active", "test"
+}

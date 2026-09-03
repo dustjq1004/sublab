@@ -1,0 +1,52 @@
+/* 스켈레톤 애니메이션 */
+@keyframes skeleton-loading {
+    0% {
+        background-position: -200px 0;
+    }
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+/* 스켈레톤 카드 스타일 */
+.skeleton-card {
+    background: #fff;
+    padding: 0.5rem;
+    margin-bottom: 16px;
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+}
+
+.skeleton-title {
+    height: 24px;
+    width: 80%;
+    margin-bottom: 12px;
+}
+
+.skeleton-subtitle {
+    height: 16px;
+    width: 60%;
+    margin-bottom: 16px;
+}
+
+.skeleton-image {
+    height: 180px;
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 12px;
+}
+
+.skeleton-text {
+    height: 14px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.skeleton-text:last-child {
+    width: 70%;
+}

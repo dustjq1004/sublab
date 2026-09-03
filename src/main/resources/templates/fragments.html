@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="categoriesFragment()" class="row g-4">
+    <div id="categories-container" class="col-12 col-xl-5">
+        <section class="admin-section-card">
+            <div class="admin-section-card__header">
+                <div>
+                    <span class="admin-section-card__eyebrow">카테고리</span>
+                    <h3 class="admin-section-card__title">카테고리 관리</h3>
+                </div>
+                <button type="button" class="btn admin-inline-action-button"
+                        data-bs-toggle="modal" data-bs-target="#categoryAddDetail" aria-label="true">
+                    <i class="bi bi-plus-lg"></i>
+                    카테고리 추가
+                </button>
+            </div>
+            <ul id="categories-content" class="list-group admin-list-group">
+
+            </ul>
+        </section>
+    </div>
+    <div id="menus-container" class="col-12 col-xl">
+        <section class="admin-section-card">
+            <div class="admin-section-card__header">
+                <div>
+                    <span class="admin-section-card__eyebrow">메뉴</span>
+                    <h3 class="admin-section-card__title">메뉴 관리</h3>
+                </div>
+                <button type="button" class="btn admin-inline-action-button" onclick="showMenuAddModal()" aria-label="true">
+                    <i class="bi bi-plus-lg"></i>
+                    메뉴 추가
+                </button>
+            </div>
+            <ul id="menus-content" class="list-group admin-list-group scrollarea">
+
+            </ul>
+        </section>
+    </div>
+</div>
+
+<div th:fragment="articlesFragment()" class="row">
+    <div id="articles-container" class="articles-container">
+        <div class="card rounded-4 border-0 shadow-sm admin-toolbar-card mb-4">
+            <div class="card-body p-3 p-lg-4">
+                <div class="admin-toolbar-card__heading">
+                    <div>
+                        <span class="admin-section-card__eyebrow">Articles</span>
+                        <h3 class="admin-section-card__title mb-1">게시글 관리</h3>
+                        <p class="admin-toolbar-card__description mb-0">검색, 필터, 정렬과 일괄 작업을 한 곳에서 처리합니다.</p>
+                    </div>
+                </div>
+                <form id="articleSearchForm">
+                    <div class="row align-items-center gx-2 gy-2">
+
+                        <div class="col-12 col-lg-auto mb-3 mb-lg-0">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <div class="admin-selection-status" id="selectedCountText">선택된 항목 없음</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-lg-auto ms-auto">
+                            <div class="input-group bg-body">
+                                <input type="text" name="title" class="form-control p-2 search-input" placeholder="Search" aria-label="Search"
+                                       aria-describedby="search">
+                                <span class="input-group-text">
+                                <a type="button" id="adminArticlesSearch">
+                                    <i class="bi bi-search"></i>
+                                </a>
+                            </span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="dropdown">
+                                <button id="articleFilterButton" class="btn admin-outline-button" type="button"
+                                        data-bs-toggle="dropdown"
+                                        data-bs-auto-close="outside"
+                                        aria-expanded="false">
+                                    <i class="bi bi-filter-left me-1"></i>
+                                    <span>필터</span>
+                                </button>
+                                <div class="dropdown-menu rounded-3 p-3 shadow">
+                                    <h4 class="fs-lg mb-4">필터</h4>
+                                    <div style="width: 350px;">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label mb-0" for="filterCategory">카테고리</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <select id="filterCategory" class="form-select">
+                                                    <option value="">Select Category</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label mb-0" for="filterMenu">메뉴</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <select id="filterMenu" class="form-select" disabled>
+                                                    <option value="">Select Menu</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label mb-0" for="filterVisibility">공개 상태</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <select id="filterVisibility" class="form-select">
+                                                    <option value="">전체</option>
+                                                    <option value="PUBLIC">공개</option>
+                                                    <option value="PRIVATE">비공개</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" id="applyFilter" class="btn btn-primary">적용</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="dropdown">
+                                <button id="articleSortButton" class="btn admin-outline-button" type="button"
+                                        data-bs-toggle="dropdown"
+                                        data-bs-auto-close="outside"
+                                        aria-expanded="false">
+                                    <i class="bi bi-sort-down me-1"></i>
+                                    <span>정렬</span>
+                                </button>
+                                <div class="dropdown-menu rounded-3 p-3 shadow">
+                                    <h4 class="fs-lg mb-4">정렬</h4>
+                                    <div style="width: 350px;">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label mb-0" for="sortBy">정렬 기준</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <select id="sortBy" class="form-select">
+                                                    <option value="createdAt">등록일</option>
+                                                    <option value="updatedAt">수정일</option>
+                                                    <option value="title">제목</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label mb-0" for="sortDirection">정렬 방향</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <select id="sortDirection" class="form-select">
+                                                    <option value="DESC">최신순</option>
+                                                    <option value="ASC">오래된순</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" id="applySort" class="btn btn-primary">적용</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="article-wrap" class="admin-article-board">
+            <div class="d-flex justify-content-end mb-3">
+                <button id="editButton" class="btn btn-primary admin-primary-button">
+                    <i class="bi bi-pencil"></i> 편집
+                </button>
+                <div id="actionButtons" class="d-none d-flex gap-2 ms-3">
+                    <button id="changePublicButton" class="btn btn-outline-success admin-action-button" disabled>
+                        <i class="bi bi-unlock"></i> 공개로 변경
+                    </button>
+                    <button id="changePrivateButton" class="btn btn-outline-secondary admin-action-button" disabled>
+                        <i class="bi bi-lock"></i> 비공개로 변경
+                    </button>
+                    <button id="deleteButton" class="btn btn-danger admin-action-button" disabled>
+                        <i class="bi bi-trash"></i> 삭제
+                    </button>
+                    <button id="cancelButton" class="btn btn-secondary admin-action-button">
+                        <i class="bi bi-x"></i> 취소
+                    </button>
+                </div>
+            </div>
+
+            <!-- 테이블 영역 -->
+            <div class="table-container admin-table-shell">
+                <table class="table table-hover table-select align-middle mb-3 admin-table">
+                    <colgroup>
+                        <col style="width: 50px;">
+                        <col style="width: 11%;">
+                        <col style="width: 12%;">
+                        <col style="width: 22%;">
+                        <col style="width: 18%;">
+                        <col style="width: 14%;">
+                        <col style="width: 11%;">
+                        <col style="width: 11%;">
+                      </colgroup>
+                    <thead>
+                    <tr>
+                        <th style="width: 0px">
+                            <div class="form-check d-none article-checkbox-container" id="tableCheckAllContainer">
+                                <input class="form-check-input article-checkbox" type="checkbox" id="tableCheckAll">
+                                <label class="form-check-label" for="tableCheckAll"></label>
+                            </div>
+                        </th>
+                        <th>공개 상태</th>
+                        <th>카테고리</th>
+                        <th>글 제목</th>
+                        <th>부 제목</th>
+                        <th>작성자</th>
+                        <th>등록일자</th>
+                        <th>수정일자</th>
+                    </tr>
+                    </thead>
+                    <tbody id="article-tbody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 페이징 버튼 영역 -->
+            <div class="pagination-container">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <p id="articlePageSummary" class="text-body-secondary mb-0">(0 total)</p>
+                    </div>
+                    <div class="col-auto">
+                        <nav aria-label="Page navigation">
+                            <ul id="articlePagination" class="pagination mb-0">
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

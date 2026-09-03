@@ -1,0 +1,329 @@
+.draft-modal {
+    margin-top: 15vh;
+    max-width: 800px;
+}
+
+.draft-modal-content {
+    background-color: var(--draft-modal-background-color);
+}
+
+.draft-modal .modal-header {
+    background-color: var(--primary-white);
+}
+
+.draft-modal .modal-footer {
+    background-color: var(--primary-white);
+}
+
+.draft-modal-body {
+    overflow: scroll;
+    height: 50vh;
+    padding: 0.5rem;
+}
+
+#draft-list:first-child .draft-item-container {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#draft-list:last-child .draft-item-container {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.draft-item {
+    list-style: none;
+}
+
+.draft-item a {
+    text-decoration: none;
+}
+
+.draft-item-container {
+    align-items: center;
+    height: var(--draft-item-height);
+    display: flex;
+    flex-direction: row;
+    color: var(--draft-item-container-color);
+    background-color: var(--draft-item-background-color);
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 0px 0.5px;
+    padding: 15px;
+    margin-bottom: 1px;
+    /*padding: 0 var(--docsearch-spacing) 0 0;*/
+}
+
+.draft-item-container:hover {
+    background-color: var(--signature-color);
+    color: var(--primary-white);
+}
+
+.draft-item-wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.2em;
+    margin: 0 8px;
+    overflow-x: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80%;
+}
+
+.draft-item-title {
+    margin-left: 10px;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    overflow: hidden; /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis; /* 초과된 텍스트를 ...으로 표시 */
+}
+
+.draft-item-icon, .draft-item-action {
+    display: flex;
+    align-items: center;
+}
+
+.draft-list-label {
+    /*background: var(--docsearch-modal-background);*/
+    color: var(--draft-list-result-label-color);
+    font-size: .85em;
+    font-weight: 600;
+    line-height: 32px;
+    margin: 0 15px;
+    padding: 8px 4px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.draft-no-item-box {
+    text-align: center;
+}
+
+.dropdown-no-item-text {
+    list-style: none;
+    font-size: 1rem;
+    color: var(--draft-no-item-color);
+}
+
+/* bootstrap tooltip custom */
+.custom-tooltip {
+    --bs-tooltip-max-width: 300px;
+    --bs-tooltip-bg: var(--draft-title-tooltip-background);
+    --bs-tooltip-color: var(--primary-white);
+}
+
+.init-button {
+    height: 40px;
+}
+
+.draft-items-button {
+    height: 40px;
+}
+
+.draft-delete-btn {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    height: 40px;
+}
+
+.draft-delete-btn:hover {
+    opacity: 1;
+}
+
+.draft-close-btn {
+    background-color: var(--draft-close-btn-color);
+    color: var(--primary-white);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.draft-close-btn:hover {
+    background-color: var(--draft-close-btn-color);
+    color: var(--primary-white);
+    opacity: 1;
+}
+
+.article-visibility-setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(124, 58, 237, 0.12);
+    border-radius: 14px;
+    background: rgba(124, 58, 237, 0.04);
+}
+
+.article-visibility-copy {
+    min-width: 0;
+}
+
+.article-visibility-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.article-visibility-help {
+    color: #666;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.article-visibility-toggle {
+    flex-shrink: 0;
+}
+
+.article-visibility-option {
+    min-width: 86px;
+    border: 1px solid rgba(124, 58, 237, 0.16);
+    background: #fff;
+    color: #555;
+    font-weight: 600;
+}
+
+.article-visibility-toggle .btn-check:checked + .article-visibility-option {
+    background: #7C3AED;
+    border-color: #7C3AED;
+    color: #fff;
+}
+
+.article-visibility-toggle .article-visibility-option:hover {
+    color: #7C3AED;
+}
+
+.article-visibility-toggle .btn-check:checked + .article-visibility-option:hover {
+    color: #fff;
+}
+
+
+/* ==========================================================================
+   THUMBNAIL SELECT MODAL
+   ========================================================================== */
+.thumbnail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+    padding: 16px 0;
+    height: 300px;
+}
+
+.thumb-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9; /* 썸네일 비율 */
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.thumb-item:hover {
+    box-shadow: 0 4px 12px rgba(124,58,237,0.15);
+    transform: translateY(-2px);
+}
+
+.thumb-item.selected {
+    outline: 2px solid #7C3AED;
+    box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+}
+
+.thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.thumb-plus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    border: 1px solid #e9ecef;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    aspect-ratio: 16/9; /* 썸네일과 동일한 비율 */
+    border-radius: 8px;
+}
+
+.thumb-plus:hover {
+    background: #e9ecef;
+    color: #495057;
+    border-color: #7C3AED;
+    transform: translateY(-2px);
+}
+
+.thumb-plus:focus {
+    outline: 2px solid #7C3AED;
+    outline-offset: 2px;
+}
+
+.thumb-plus-icon {
+    font-size: 32px;
+    line-height: 1;
+    font-weight: 300;
+}
+
+.thumb-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #7C3AED;
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   CROPPER MODAL STYLES
+   ========================================================================== */
+#cropperModal .modal-body {
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+#cropper-image {
+    max-width: 100%;
+    max-height: 600px;
+    width: auto;
+    height: auto;
+    min-height: 400px;
+}
+
+.cropper-container {
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    padding: 1.25rem 1.5rem;
+}
+
+@media (max-width: 767px) {
+    .article-visibility-setting {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .article-visibility-toggle {
+        width: 100%;
+    }
+
+    .article-visibility-toggle .article-visibility-option {
+        min-width: 0;
+    }
+}

@@ -1,0 +1,30 @@
+spring:
+  config:
+    activate:
+      on-profile: log
+  jpa:
+    show_sql: true # System.out 방식 로그
+    properties:
+      hibernate:
+        #        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+    # 테이블 생성 후에 data.sql 실행
+    defer-datasource-initialization: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug # logger 방식 로그
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace # 파라미터 바인딩 로그
+  file:
+    path: /app/logs
+
+  driver: json-file
+  options:
+    max-size: "100m"
+    max-file: "5"

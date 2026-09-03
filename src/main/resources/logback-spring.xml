@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- application.yml 값 연동 -->
+
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="suplab"/>
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="./logs/suplab"/>
+
+    <!-- 공통 로그 패턴 -->
+
+    <property name="LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){magenta} %clr(%X{clientIP}){blue} %X{requestId} %clr([%-5level]){} %clr(%logger{30}){cyan} - %msg%n"/>
+
+
+
+    <!-- Appenders -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                ${LOG_PATTERN}
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 전체 로그 파일 -->
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}.log</file>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 날짜 + 파일 크기 기준 롤링 -->
+            <fileNamePattern>${LOG_PATH}/archive/${APP_NAME}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- 파일 하나의 최대 크기 -->
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 보관 기간 -->
+            <maxHistory>30</maxHistory>
+            <!-- 전체 로그 보관 최대 용량 -->
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ERROR 로그 전용 파일 -->
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/error.log</file>
+        <!-- ERROR 이상만 저장 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <SpringProfile name="local">
+        <!-- SQL 확인용 -->
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+        <!-- Spring Web 요청 흐름 확인용 -->
+        <logger name="org.springframework.web" level="DEBUG"/>
+        <!-- 내 애플리케이션 패키지 -->
+        <logger name="me.kimyeonsup" level="DEBUG"/>
+
+        <logger name="sun.rmi" level="OFF"/>
+        <logger name="javax.management" level="OFF"/>
+
+        <root level="DEBUG">
+            <appender-ref ref="console"/>
+        </root>
+    </SpringProfile>
+    <SpringProfile name="dev">
+        <!-- 프레임워크 로그 과다 출력 방지 -->
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.web" level="INFO"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="org.hibernate.SQL" level="WARN"/>
+        <logger name="org.hibernate.orm.jdbc.bind" level="WARN"/>
+        <logger name="com.zaxxer.hikari" level="INFO"/>
+        <logger name="org.apache.catalina" level="INFO"/>
+
+        <!-- RMI / JMX 내부 DEBUG 로그 숨김 -->
+        <logger name="sun.rmi" level="WARN"/>
+        <logger name="sun.rmi.transport" level="WARN"/>
+        <logger name="sun.rmi.transport.tcp" level="WARN"/>
+        <logger name="sun.rmi.loader" level="WARN"/>
+
+        <logger name="javax.management" level="WARN"/>
+        <logger name="javax.management.remote" level="WARN"/>
+        <logger name="javax.management.remote.rmi" level="WARN"/>
+
+        <!-- 내 애플리케이션 패키지 -->
+        <logger name="me.kimyeonsup" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </SpringProfile>
+</configuration>

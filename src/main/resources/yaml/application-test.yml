@@ -1,0 +1,71 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+    import: optional:file:.env[.properties]
+
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  messages:
+    basename: message/errors
+    encoding: UTF-8
+  jpa:
+    # 전송 쿼리 확인
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+
+    # 테이블 생성 후에 data.sql 실행
+    defer-datasource-initialization: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    user: sa
+
+  h2:
+    console:
+      enabled: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: client-id
+            client-secret: client-secret
+            scope:
+              - email
+              - profile
+
+
+server:
+  shutdown: graceful
+
+jwt:
+  issuer: admin@example.com
+  secret_key: test-only-jwt-signing-key-not-for-production
+
+admin:
+  email: admin@example.com
+
+cloud:
+  aws:
+    region: ap-northeast-2
+    credentials:
+      access-key: test-access-key
+      secret-key: test-secret-key
+  s3:
+    bucket: test-bucket
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug #
+        orm:
+          jdbc:
+            bind: trace

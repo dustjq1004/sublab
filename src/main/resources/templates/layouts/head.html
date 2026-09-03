@@ -1,0 +1,29 @@
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="mCyIiF_DV3dbMc3vdD7UeYzyQ6ArZ2j9u6EOvrPh4Hk"/> <!--Google SEO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} ?: 'Sup Lab'"></title>
+    <meta property="title" th:content="${title} ?: 'Sup Lab'"/>
+    <meta property="description"
+          th:content="${#strings.isEmpty(description) ? 'Sup Lab - 기술 블로그' : description}"/>
+    <meta property="og:title" th:content="${title} ?: 'Sup Lab'"/>
+    <meta property="og:description"
+          th:content="${#strings.isEmpty(description) ? 'Sup Lab - 기술 블로그' : description}"/>
+    <meta property="og:type" th:content="${#strings.isEmpty(type) ? 'website' : type}"/>
+    <meta property="og:image"
+          th:content="${#strings.isEmpty(image) ? '/img/noimage01.png' : image}"/>
+<!--    <meta property="og:url"-->
+<!--          th:content="${url != null ? url : #request.requestURL.toString()}"/>-->
+    <!-- Common links/styles -->
+    <link rel="shortcut icon" href="/img/favicon/favicon_circular.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon_circular_16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon_circular_32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon/favicon_circular_48x48.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/img/favicon/favicon_circular_64x64.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="/img/favicon/favicon_circular_128x128.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="/img/favicon/fa_circularvicon_circular_256x256.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/favicon_circular_256x256.png">
+    <th:block th:replace="~{layouts/link :: link}"></th:block>
+</head>
+    
+

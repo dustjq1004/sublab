@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index}"
+      layout:fragment="content">
+<head>
+    <title>504 - 요청 시간 초과 | SupLab</title>
+    <link rel="stylesheet" th:href="@{/css/error-common.css}">
+</head>
+<body>
+<div class="error-container position-relative">
+    <div class="particles" id="particles"></div>
+    <div class="error-content">
+        <div class="error-illustration">
+            <i class="bi bi-clock-history error-icon"></i>
+        </div>
+        <div class="error-code">504</div>
+        <h1 class="error-title">요청 시간이 초과되었습니다</h1>
+        <p class="error-message">
+            서버가 요청을 처리하는 데 시간이 너무 오래 걸렸습니다.<br>
+            잠시 후 다시 시도해주시거나, 홈으로 돌아가시기 바랍니다.
+        </p>
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary btn-home">
+                <i class="bi bi-house-door me-2"></i>홈으로 가기
+            </a>
+            <button onclick="location.reload()" class="btn btn-outline-secondary btn-back">
+                <i class="bi bi-arrow-clockwise me-2"></i>다시 시도
+            </button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/error-common.js}"></script>
+</body>
+</html>
+
