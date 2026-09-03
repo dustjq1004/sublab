@@ -1,4 +1,5 @@
-# sup-lab
+# sup-lab (포트폴리오 공개용)
+해당 Repository는 포트폴리오 공개용 GitHub Repository입니다. 실제 운영 중인 Repository는 보안 및 프로젝트 신규 개발 진행상의 이유로 비공개로 관리하고 있으며, 포트폴리오에는 주요 설계 및 구현 내용을 중심으로 선별하여 공개하였습니다.
 
 > Markdown 기반 개인 블로그 플랫폼
 > 실제 서비스를 목적으로한 Spring Boot 기반 개인 블로그입니다.
