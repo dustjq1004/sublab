@@ -1,20 +1,21 @@
-# sup-blog
+# sup-lab
 
-> 개인 블로그 플랫폼
+> Markdown 기반 개인 블로그 플랫폼
+> 실제 서비스를 목적으로한 Spring Boot 기반 개인 블로그입니다.
 
-Markdown 기반 글 작성·관리, Google OAuth2 로그인, AWS S3 이미지 업로드를 지원하는 풀스택 블로그입니다.
+AWS 기반 운영 환경을 직접 구축, Github Action을 활용하여 테스트/빌드/배포 자동화, Prometheus/Grafana 기반 모니터링 등 실제 운영을 위한 아키텍쳐를 설계하고 구현했습니다.
+현재는 AI를 활용하여 기능을 개선 및 확장해가고 있습니다.
 
 ---
 
 ## 주요 기능 / Features
 
-- 블로그 글 작성·수정·삭제 (관리자)
-- 임시 저장 (Draft) 기능
-- Markdown 렌더링 (CommonMark / Flexmark)
-- Google OAuth2 소셜 로그인
-- AWS S3 이미지 업로드 및 Presigned URL
-- 카테고리·메뉴 관리
-- Swagger UI API 문서 (`/swagger-ui/index.html`)
+- 소셜 로그인 : Google OAuth2, JWT
+- 블로그 : 마크다운(CommonMark / Flexmark) 기반 블로그 에디터, 관리자 기능, AWS S3 Presigned URL 이미지 업로드, 임시 저장, 비밀글
+- GitHub Actions 기반 배포 자동화
+- Spring Boot Actuator + Prometheus + Grafana 모니터링
+- AWS EC2, Nginx, Docker, MySQL 기반 서버 환경 구성
+- Swagger UI API 문서
 
 ---
 
@@ -25,76 +26,23 @@ Markdown 기반 글 작성·관리, Google OAuth2 로그인, AWS S3 이미지 �
 | Language | Java 17 |
 | Framework | Spring Boot 3.2.0 |
 | Security | Spring Security 6, Google OAuth2, JWT (jjwt 0.9.1) |
-| Template | Thymeleaf + Layout Dialect |
+| Template | Thymeleaf |
 | ORM | JPA / Hibernate |
 | DB (local) | H2 in-memory |
 | DB (prod) | MySQL 8 / AWS RDS |
-| Storage | AWS S3 (`ap-northeast-2`) |
-| Deploy | AWS Elastic Beanstalk, Docker, GitHub Actions |
+| Infrastructure | AWS EC2, RDS, S3, Route53 |
+| Deploy | Docker, GitHub Actions |
+| Monitoring| Spring Boot Actuator, Prometheus, Grafana |
 | Build | Gradle 8.2 |
 | Docs | SpringDoc OpenAPI (Swagger) |
 
 ---
 
-## 시작하기 / Getting Started
-
-### 1. 환경변수 설정 / Environment Variables
-
-저장소 루트의 `.env.example`을 `.env`로 복사한 뒤 실제 값을 입력하세요. `.env`는 Git과 Docker 빌드 컨텍스트에서 제외됩니다.
-
-```dotenv
-GOOGLE_CLIENT_ID=<your-google-client-id>
-GOOGLE_CLIENT_SECRET=<your-google-client-secret>
-AWS_ACCESS_KEY=<your-aws-access-key>
-AWS_SECRET_KEY=<your-aws-secret-key>
-JWT_ISSUER=<your-email>
-JWT_SECRET_KEY=<long-random-signing-key>
-ADMIN_EMAIL=<admin-email>
-S3_BUCKET=<your-s3-bucket>
-```
-
-`local` 프로필은 외부 OAuth2·S3 연동이 필요 없을 때 비밀이 아닌 개발용 기본값으로 실행됩니다. `dev` 프로필은 `.env.example`에 기재된 항목을 모두 외부 환경변수로 주입해야 합니다.
-
-GitHub Actions 배포 시 AWS 키는 Actions Secrets에, Elastic Beanstalk 애플리케이션명과 환경명은 `EB_APPLICATION_NAME`, `EB_ENVIRONMENT_NAME` Repository Variable에 등록합니다.
-
-### 2. 로컬 실행 / Local Run
-
-로컬 환경은 H2 in-memory DB를 사용합니다 (별도 DB 설치 불필요).
-
-```bash
-# 의존성 설치 및 빌드 / Build
-./gradlew clean build
-
-# 로컬 프로파일로 실행 / Run with local profile
-./gradlew bootRun --args='--spring.profiles.active=local'
-```
-
-- 앱: http://localhost:8080
-- H2 콘솔: http://localhost:8080/h2-console
-
-### 3. IntelliJ 설정 / IntelliJ Setup
-
-`command + ,` → Build, Execution, Deployment → Compiler → Java Compiler  
-**Additional command line parameters** 에 `-parameters` 입력 후 Apply
-
-### 4. 프로파일 / Profiles
-
-| 프로파일 | 설명 |
-|----------|------|
-| `local` | H2 in-memory DB, DevTools 활성화 |
-| `dev` | MySQL (AWS RDS), 운영 설정 |
-| `test` | H2 in-memory, 테스트 자동 활성화 |
-
-### 5. 테스트 / Test
-
-```bash
-./gradlew test
-```
-
----
-
 ## 아키텍처 / Architecture
 
+<img width="793" height="687" alt="image" src="https://github.com/user-attachments/assets/649b5402-d987-445e-9920-5008c1b6fb4c" />
+
+### 패키지 구조
 DDD 기반 계층형 아키텍처를 따릅니다.  
 Controller → Service → Repository → Entity 계층 간 엄격한 단방향 의존성을 유지합니다.
 
@@ -108,7 +56,7 @@ src/main/java/me/kimyeonsup/home/
 │   │   │   └── menu/       # 카테고리·메뉴 관리 / Category & menu
 │   │   ├── draft/          # 임시 저장 / Draft management
 │   │   └── markdown/       # Markdown 파싱 / Markdown parsing
-│   ├── main/               # 홈 화면 집계 / Homepage aggregation
+│   ├── main/               # 홈 화면 / Homepage aggregation
 │   └── upload/             # 파일 업로드 / File upload
 ├── global/
 │   ├── api/                # 공통 응답 ApiResponse<T>
@@ -129,3 +77,4 @@ src/main/java/me/kimyeonsup/home/
   "data": { ... }
 }
 ```
+
