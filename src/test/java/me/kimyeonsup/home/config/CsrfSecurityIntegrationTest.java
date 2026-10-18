@@ -1,7 +1,7 @@
 package me.kimyeonsup.home.config;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -17,10 +17,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-@SpringBootTest(properties = "spring.jpa.hibernate.ddl-auto=create-drop")
+// SecurityMockMvcRequestPostProcessors.csrf() mutates the shared CsrfFilter repository, so this test needs its own context.
+@SpringBootTest(properties = "test.context.csrf-security=isolated")
 @AutoConfigureMockMvc
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 class CsrfSecurityIntegrationTest {
 
     @Autowired
@@ -28,49 +30,58 @@ class CsrfSecurityIntegrationTest {
 
     @Test
     @DisplayName("안전한 요청에서 브라우저가 읽을 수 있는 CSRF 쿠키를 발급한다")
-    void issuesCsrfCookie() throws Exception {
+    void issueCsrfCookie() throws Exception {
         mockMvc.perform(get("/api/articles"))
                 .andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.SET_COOKIE, containsString("XSRF-TOKEN=")));
+                .andExpect(header().string(HttpHeaders.SET_COOKIE, containsString("XSRF-TOKEN=")))
+                .andExpect(result -> assertThat(result.getResponse()
+                        .getCookie("XSRF-TOKEN")
+                        .getAttribute("SameSite")).isEqualTo("Lax"));
     }
 
     @Test
-    @DisplayName("CSRF 토큰이 없는 상태 변경 요청을 거부한다")
-    void rejectsPostWithoutCsrfToken() throws Exception {
-        mockMvc.perform(post("/api/md/render")
+    @DisplayName("CSRF 토큰이 없는 상태 변경 요청은 거부한다")
+    void rejectPostWithoutCsrfToken() throws Exception {
+        mockMvc.perform(post("/api/token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"content\":\"hello\"}"))
+                        .content("{}"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @DisplayName("유효한 CSRF 토큰이 있는 상태 변경 요청을 허용한다")
-    void allowsPostWithCsrfToken() throws Exception {
-        mockMvc.perform(post("/api/md/render")
-                        .with(csrf())
+    @DisplayName("쿠키 없이 Bearer Token만 사용하는 요청은 CSRF 검증 대상에서 제외한다")
+    void allowBearerOnlyRequestWithoutCsrfToken() throws Exception {
+        mockMvc.perform(post("/api/token")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer api-client-token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"content\":\"hello\"}"))
-                .andExpect(status().isOk());
+                        .content("{}"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @DisplayName("쿠키 없이 Bearer 토큰만 사용하는 API 요청은 CSRF 검증에서 제외한다")
-    void allowsBearerOnlyRequestWithoutCsrfToken() throws Exception {
-        mockMvc.perform(post("/api/md/render")
+    @DisplayName("인증 쿠키가 있으면 Bearer 헤더가 있어도 CSRF 토큰을 검증한다")
+    void rejectCookieRequestWithoutCsrfTokenEvenWithBearerHeader() throws Exception {
+        mockMvc.perform(post("/api/token")
+                        .cookie(new Cookie("access_token", "cookie-token"))
                         .header(HttpHeaders.AUTHORIZATION, "Bearer api-client-token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"content\":\"hello\"}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("세션 쿠키가 있으면 Bearer 헤더가 있어도 CSRF 토큰을 검증한다")
-    void rejectsCookieRequestWithoutCsrfTokenEvenWithBearerHeader() throws Exception {
-        mockMvc.perform(post("/api/md/render")
-                        .cookie(new Cookie("JSESSIONID", "browser-session"))
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer api-client-token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"content\":\"hello\"}"))
+                        .content("{}"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("CSRF 토큰이 있는 상태 변경 요청은 CSRF 검증을 통과한다")
+    void allowPostWithCsrfToken() throws Exception {
+        MvcResult csrfResponse = mockMvc.perform(get("/api/articles"))
+                .andExpect(status().isOk())
+                .andReturn();
+        Cookie csrfCookie = csrfResponse.getResponse().getCookie("XSRF-TOKEN");
+
+        mockMvc.perform(post("/api/token")
+                        .cookie(csrfCookie)
+                        .header("X-XSRF-TOKEN", csrfCookie.getValue())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isUnauthorized());
     }
 }

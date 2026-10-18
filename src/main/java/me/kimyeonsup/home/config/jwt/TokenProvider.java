@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
-import me.kimyeonsup.home.login.domain.entity.User;
+import me.kimyeonsup.home.domain.login.domain.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -65,6 +65,10 @@ public class TokenProvider {
     public Long getUserId(String token) {
         Claims claims = getClaims(token);
         return claims.get("id", Long.class);
+    }
+
+    public String getSubject(String token) {
+        return getClaims(token).getSubject();
     }
 
     private Claims getClaims(String token) {

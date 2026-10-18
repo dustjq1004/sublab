@@ -35,8 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
 
         ApiResponse<Void> body = ApiResponse.fail(HttpStatus.BAD_REQUEST, "E001", "Validation failed", errors);
-        log.warn("Validation failed. fields={}",
-                errors.stream().map(ErrorDto::getField).toList());
+        log.warn("Request validation failed: {}", errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
@@ -44,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException ex) {
         ApiResponse<Void> body = ApiResponse.fail(ex.getHttpStatus(), ex.getCode(), ex.getMessage(), null);
-        log.warn("Business exception. code={}", ex.getCode());
+        log.warn("Business request failed: {} - {}", ex.getCode(), ex.getMessage());
 
         return new ResponseEntity<>(body, ex.getHttpStatus());
     }
@@ -54,7 +53,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         DraftConflictException conflictException = new DraftConflictException(ex);
         ApiResponse<Void> body = ApiResponse.fail(conflictException.getHttpStatus(), conflictException.getCode(), conflictException.getMessage(), null);
 
-        log.warn("Optimistic lock conflict");
+        log.warn("Draft update conflict: {}", ex.getMessage());
 
         return new ResponseEntity<>(body, conflictException.getHttpStatus());
     }
@@ -67,7 +66,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleTransientLockException(Exception ex) {
         ApiResponse<Void> body = ApiResponse.fail(HttpStatus.SERVICE_UNAVAILABLE, "E503", "일시적인 DB 락 경합이 발생했습니다. 잠시 후 다시 시도해주세요.", null);
 
-        log.error("Transient database lock conflict. type={}", ex.getClass().getSimpleName());
+        log.error("Transient database lock failure: {}", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.SERVICE_UNAVAILABLE);
     }

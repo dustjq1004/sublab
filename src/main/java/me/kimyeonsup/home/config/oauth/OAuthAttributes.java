@@ -2,7 +2,7 @@ package me.kimyeonsup.home.config.oauth;
 
 import lombok.Builder;
 import lombok.Getter;
-import me.kimyeonsup.home.login.domain.entity.User;
+import me.kimyeonsup.home.domain.login.domain.entity.User;
 
 import java.util.Map;
 

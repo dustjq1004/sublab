@@ -10,14 +10,6 @@ spring:
     basename: message/errors
     encoding: UTF-8
   jpa:
-    # 전송 쿼리 확인
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
-        use_sql_comments: true
-
     # 테이블 생성 후에 data.sql 실행
     defer-datasource-initialization: true
 
@@ -35,8 +27,8 @@ spring:
       client:
         registration:
           google:
-            client-id: client-id
-            client-secret: client-secret
+            client-id: test-client-id
+            client-secret: test-client-secret
             scope:
               - email
               - profile
@@ -52,6 +44,9 @@ jwt:
 admin:
   email: admin@example.com
 
+oauth2:
+  redirect-uri: http://localhost:5173
+
 cloud:
   aws:
     region: ap-northeast-2
@@ -60,12 +55,3 @@ cloud:
       secret-key: test-secret-key
   s3:
     bucket: test-bucket
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: debug #
-        orm:
-          jdbc:
-            bind: trace

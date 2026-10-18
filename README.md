@@ -1,5 +1,4 @@
-# sup-lab (포트폴리오 공개용)
-해당 Repository는 포트폴리오 공개용 GitHub Repository입니다. 실제 운영 중인 Repository는 보안 및 프로젝트 신규 개발 진행상의 이유로 비공개로 관리하고 있으며, 포트폴리오에는 주요 설계 및 구현 내용을 중심으로 선별하여 공개하였습니다.
+# sublab
 
 > Markdown 기반 개인 블로그 플랫폼
 > 실제 서비스를 목적으로한 Spring Boot 기반 개인 블로그입니다.
@@ -8,6 +7,23 @@ AWS 기반 운영 환경을 직접 구축, Github Action을 활용하여 테스�
 현재는 AI를 활용하여 기능을 개선 및 확장해가고 있습니다.
 
 ---
+
+## 로컬 실행
+
+Java 17 이상이 필요합니다. 저장소 루트에서 실행합니다.
+
+```bash
+cp .env.example .env
+./gradlew bootRun --args='--spring.profiles.active=local'
+```
+
+기본값으로 H2를 사용합니다. Google 로그인과 S3 업로드를 사용하려면 `.env`에 본인의 자격증명을 설정하세요. 실제 `.env`는 커밋하지 않습니다.
+
+```bash
+./gradlew build
+```
+
+이 저장소는 운영 프로젝트의 공개용 코드 사본이며 운영 저장소의 Git 이력은 포함하지 않습니다.
 
 ## 주요 기능 / Features
 
@@ -27,7 +43,6 @@ AWS 기반 운영 환경을 직접 구축, Github Action을 활용하여 테스�
 | Language | Java 17 |
 | Framework | Spring Boot 3.2.0 |
 | Security | Spring Security 6, Google OAuth2, JWT (jjwt 0.9.1) |
-| Template | Thymeleaf |
 | ORM | JPA / Hibernate |
 | DB (local) | H2 in-memory |
 | DB (prod) | MySQL 8 / AWS RDS |
@@ -44,28 +59,20 @@ AWS 기반 운영 환경을 직접 구축, Github Action을 활용하여 테스�
 <img width="793" height="687" alt="image" src="https://github.com/user-attachments/assets/649b5402-d987-445e-9920-5008c1b6fb4c" />
 
 ### 패키지 구조
-DDD 기반 계층형 아키텍처를 따릅니다.  
-Controller → Service → Repository → Entity 계층 간 엄격한 단방향 의존성을 유지합니다.
 
-```
+도메인별로 코드를 구성하며, Article과 Draft는 포트와 어댑터를 분리합니다.
+
+```text
 src/main/java/me/kimyeonsup/home/
 ├── domain/
-│   ├── blog/
-│   │   ├── article/        # 공개 글 조회 / Public article view
-│   │   ├── admin/
-│   │   │   ├── article/    # 관리자 글 CRUD / Admin article CRUD
-│   │   │   └── menu/       # 카테고리·메뉴 관리 / Category & menu
-│   │   ├── draft/          # 임시 저장 / Draft management
-│   │   └── markdown/       # Markdown 파싱 / Markdown parsing
-│   ├── main/               # 홈 화면 / Homepage aggregation
-│   └── upload/             # 파일 업로드 / File upload
-├── global/
-│   ├── api/                # 공통 응답 ApiResponse<T>
-│   ├── config/             # Security, S3, JPA 설정
-│   ├── exception/          # 비즈니스 예외 처리
-│   └── auth/               # OAuth2, JWT
-├── login/                  # 로그인·토큰 갱신 / Auth & token refresh
-└── infra/                  # S3, Markdown 인프라 / Infrastructure
+│   ├── article/     # 글 조회·관리: adaptor / application / domain
+│   ├── draft/       # 임시 저장: adaptor / application / domain
+│   ├── menu/        # 카테고리·메뉴 관리
+│   ├── login/       # 로그인·토큰 갱신
+│   └── upload/      # 이미지 업로드
+├── config/         # Security, OAuth2, JWT, S3 설정
+├── global/         # 공통 API 응답, 예외, 필터
+└── util/           # 공통 유틸리티
 ```
 
 ### 응답 포맷 / Response Format
@@ -78,4 +85,3 @@ src/main/java/me/kimyeonsup/home/
   "data": { ... }
 }
 ```
-

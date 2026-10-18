@@ -54,6 +54,9 @@ jwt:
 admin:
   email: ${ADMIN_EMAIL}
 
+oauth2:
+  redirect-uri: ${OAUTH2_REDIRECT_URI}
+
 cloud:
   aws:
     region: ap-northeast-2

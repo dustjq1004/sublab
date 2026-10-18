@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.kimyeonsup.home.domain.blog.article.domain.dto.PresignedUrlResponse;
+import me.kimyeonsup.home.domain.article.adaptor.in.web.file.reponse.PresignedUrlResponse;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -42,7 +42,7 @@ public class S3PresignedService {
 
             return PresignedUrlResponse.of(signedUrl, keyName);
         } catch (Exception e) {
-            log.error("S3 Presigned URL 생성 실패. type={}", e.getClass().getSimpleName());
+            log.error("S3 Presigned URL 생성 실패: {}", e.getMessage());
             throw e;
         }
     }

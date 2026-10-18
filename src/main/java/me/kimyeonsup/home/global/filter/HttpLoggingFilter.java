@@ -23,8 +23,11 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request,
                                  HttpServletResponse response,
                                  FilterChain filterChain) throws ServletException, IOException {
-        String clientIP = StringUtils.nvl(request.getRemoteAddr(), "unknown");
-        String requestId = UUID.randomUUID().toString();
+        String clientIP = request.getHeader("X-Forwarded-For");
+        String requestId = request.getHeader("X-Request-Id");
+
+        clientIP = StringUtils.nvl(clientIP, request.getRemoteAddr());
+        requestId = StringUtils.nvl(requestId, UUID.randomUUID().toString()); // local 환경에서 구분을 위하여 추가
 
         MDC.put("clientIP", clientIP);
         MDC.put("requestId", requestId);
@@ -33,13 +36,10 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
             int status = response.getStatus();
-            if (status >= 400) {
-                log.error("Request failed with status: {}, clientIP: {}, requestId: {}", status, clientIP, requestId);
-            } else {
-                log.info("Request completed with status: {}, clientIP: {}, requestId: {}", status, clientIP, requestId);
-            }
+            log.debug("Request completed: {} {} ({})", request.getMethod(), request.getRequestURI(), status);
         } finally {
             MDC.clear();
         }
     }
+
 }

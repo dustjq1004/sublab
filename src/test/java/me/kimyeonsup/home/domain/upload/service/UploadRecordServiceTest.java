@@ -35,7 +35,7 @@ class UploadRecordServiceTest {
     void setUp() {
         testImage = UploadedImage.builder()
                 .type("image")
-                .url("https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/test-object-image.png")
+                .url("https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/sample-image.png")
                 .logicalName("test-image.jpg")
                 .size(1024L)
                 .userId("test-user")
@@ -63,7 +63,7 @@ class UploadRecordServiceTest {
         // given
         AddUploadImageRequest request = new AddUploadImageRequest(
                 "image",
-                "https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/test-object-image.png",
+                "https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/sample-image.png",
                 "service-test.jpg",
                 2048L
         );
@@ -121,7 +121,7 @@ class UploadRecordServiceTest {
         // given
         AddUploadImageRequest addUploadImageRequest = new AddUploadImageRequest(
                 "image",
-                "https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/test-object-image.png",
+                "https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/sample-image.png",
                 "test.png",
                 1024L
         );
@@ -141,7 +141,7 @@ class UploadRecordServiceTest {
         // given
         AddUploadImageRequest addUploadImageRequest = new AddUploadImageRequest(
                 "image",
-                "https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/test-object-image.png",
+                "https://test-bucket.s3.ap-northeast-2.amazonaws.com/images/sample-image.png",
                 "test.png",
                 5 * 1024L * 1024L + 1
         );

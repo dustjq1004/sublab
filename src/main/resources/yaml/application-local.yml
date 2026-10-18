@@ -17,14 +17,6 @@ spring:
       spec: maximumSize=500,expireAfterWrite=10m
 
   jpa:
-    # 전송 쿼리 확인
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
-        use_sql_comments: true
-
     # 테이블 생성 후에 data.sql 실행
     defer-datasource-initialization: true
 
@@ -51,8 +43,6 @@ spring:
   devtools:
     livereload:
       enabled: true
-    thymeleaf:
-      cache: false
     restart:
       enabled: true
 
@@ -71,6 +61,9 @@ jwt:
 admin:
   email: ${ADMIN_EMAIL:admin@example.com}
 
+oauth2:
+  redirect-uri: ${OAUTH2_REDIRECT_URI:http://localhost:5173/}
+
 cloud:
   aws:
     region: ap-northeast-2
@@ -79,15 +72,6 @@ cloud:
       secret-key: ${AWS_SECRET_KEY:local-secret-key}
   s3:
     bucket: ${S3_BUCKET:local-bucket}
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: debug # logger 방식 로그
-        orm:
-          jdbc:
-            bind: trace
 
 management:
   server:

@@ -1,10 +1,8 @@
 package me.kimyeonsup.home.config.oauth;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import me.kimyeonsup.home.login.domain.dto.SessionUser;
-import me.kimyeonsup.home.login.domain.entity.User;
-import me.kimyeonsup.home.login.repository.UserRepository;
+import me.kimyeonsup.home.domain.login.domain.entity.User;
+import me.kimyeonsup.home.domain.login.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,12 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
 
-    public static final String SESSION_USER_KEY = "user";
-    private static final int INTERVAL_TIME = 30 * 60;
     private static final String EXCEPTION_MESSAGE = "관리자만 로그인 가능합니다.";
 
     private final UserRepository userRepository;
-    private final HttpSession httpSession;
     private final AdminProperties adminProperties;
 
     @Override
@@ -40,9 +35,6 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         }
 
         User user = saveOrUpdate(oAuthAttributes);
-
-        httpSession.setMaxInactiveInterval(INTERVAL_TIME);
-        httpSession.setAttribute(SESSION_USER_KEY, new SessionUser(user));
         return new PrincipalDetail(user, oAuthAttributes);
     }
 

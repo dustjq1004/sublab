@@ -68,18 +68,14 @@
     </appender>
 
     <SpringProfile name="local">
-        <!-- SQL 확인용 -->
-        <logger name="org.hibernate.SQL" level="DEBUG"/>
-        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
-        <!-- Spring Web 요청 흐름 확인용 -->
-        <logger name="org.springframework.web" level="DEBUG"/>
-        <!-- 내 애플리케이션 패키지 -->
-        <logger name="me.kimyeonsup" level="DEBUG"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="me.kimyeonsup" level="INFO"/>
 
         <logger name="sun.rmi" level="OFF"/>
         <logger name="javax.management" level="OFF"/>
 
-        <root level="DEBUG">
+        <root level="INFO">
             <appender-ref ref="console"/>
         </root>
     </SpringProfile>

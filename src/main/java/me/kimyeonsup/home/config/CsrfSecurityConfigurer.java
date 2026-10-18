@@ -14,9 +14,11 @@ public final class CsrfSecurityConfigurer {
                 .path("/")
                 .sameSite("Lax"));
 
+        CookieCsrfTokenRequestHandler requestHandler = new CookieCsrfTokenRequestHandler();
+
         http.csrf(csrf -> csrf
                 .csrfTokenRepository(tokenRepository)
-                .csrfTokenRequestHandler(new CookieCsrfTokenRequestHandler())
+                .csrfTokenRequestHandler(requestHandler)
                 .requireCsrfProtectionMatcher(new CookieCsrfProtectionMatcher()));
     }
 }

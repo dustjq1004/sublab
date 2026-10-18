@@ -1,17 +1,16 @@
 package me.kimyeonsup.home.config;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Set;
+import me.kimyeonsup.home.config.oauth.OAuth2SuccessHandler;
+import me.kimyeonsup.home.util.CookieUtil;
+import me.kimyeonsup.home.util.JwtUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class CookieCsrfProtectionMatcher implements RequestMatcher {
 
     private static final Set<String> SAFE_METHODS = Set.of("GET", "HEAD", "TRACE", "OPTIONS");
-    private static final Set<String> AUTHENTICATION_COOKIES =
-            Set.of("JSESSIONID", "access_token", "refresh_token");
 
     @Override
     public boolean matches(HttpServletRequest request) {
@@ -23,21 +22,12 @@ public class CookieCsrfProtectionMatcher implements RequestMatcher {
             return true;
         }
 
-        return !hasBearerToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+        String bearerToken = JwtUtils.extractBearerToken(request.getHeader(HttpHeaders.AUTHORIZATION));
+        return bearerToken == null;
     }
 
     private boolean hasAuthenticationCookie(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        return cookies != null && Arrays.stream(cookies)
-                .anyMatch(cookie -> AUTHENTICATION_COOKIES.contains(cookie.getName()));
-    }
-
-    private boolean hasBearerToken(String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return false;
-        }
-
-        String token = authorizationHeader.substring("Bearer ".length()).trim();
-        return !token.isEmpty() && !"null".equalsIgnoreCase(token);
+        return CookieUtil.getCookieValue(request, CookieUtil.ACCESS_TOKEN_COOKIE_NAME).isPresent()
+                || CookieUtil.getCookieValue(request, OAuth2SuccessHandler.REFRESH_TOKEN_COOKIE_NAME).isPresent();
     }
 }

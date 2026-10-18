@@ -8,6 +8,7 @@ import com.vladsch.flexmark.ext.aside.AsideExtension;
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.definition.DefinitionExtension;
 import com.vladsch.flexmark.ext.emoji.EmojiExtension;
+import com.vladsch.flexmark.ext.emoji.EmojiImageType;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.ins.InsExtension;
@@ -23,7 +24,7 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.List;
-import me.kimyeonsup.home.domain.blog.markdown.service.MarkdownService;
+import me.kimyeonsup.home.domain.markdown.service.MarkdownService;
 import org.jsoup.safety.Safelist;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,7 +58,8 @@ public class FlexmarkConfig {
                 .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "language-")
                 .set(TocExtension.TITLE, "목차")
                 .set(TocExtension.DIV_CLASS, "toc")
-                .set(TocExtension.LIST_CLASS, "toc-list");
+                .set(TocExtension.LIST_CLASS, "toc-list")
+                .set(EmojiExtension.USE_IMAGE_TYPE, EmojiImageType.UNICODE_ONLY);
 
         return Parser.builder(options).build();
     }

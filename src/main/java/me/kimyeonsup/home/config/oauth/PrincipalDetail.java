@@ -1,6 +1,6 @@
 package me.kimyeonsup.home.config.oauth;
 
-import me.kimyeonsup.home.login.domain.entity.User;
+import me.kimyeonsup.home.domain.login.domain.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;

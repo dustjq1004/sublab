@@ -22,4 +22,8 @@ public class MessageSourceResolver {
     public String resolve(BaseExceptionMessage exceptionMessage, long id) {
         return resolve(exceptionMessage, new Object[]{id});
     }
+
+    public String resolve(BaseExceptionMessage exceptionMessage, String str) {
+        return resolve(exceptionMessage, new Object[]{str});
+    }
 }

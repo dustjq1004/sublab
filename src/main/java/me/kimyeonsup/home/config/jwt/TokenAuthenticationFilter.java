@@ -4,13 +4,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
-
 import lombok.RequiredArgsConstructor;
-import me.kimyeonsup.home.config.oauth.OAuth2UserCustomService;
-import me.kimyeonsup.home.login.domain.dto.SessionUser;
+import me.kimyeonsup.home.config.oauth.PrincipalDetail;
+import me.kimyeonsup.home.global.exception.business.UserNotFoundException;
+import me.kimyeonsup.home.domain.login.service.UserDetailService;
+import me.kimyeonsup.home.util.CookieUtil;
+import me.kimyeonsup.home.util.StringUtils;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,7 +23,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final static String TOKEN_PREFIX = "Bearer ";
 
     private final TokenProvider tokenProvider;
-    private final HttpSession httpSession;
+    private final UserDetailService userDetailService;
 
     @Override
     protected void doFilterInternal(
@@ -30,14 +31,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
-        String token = getAccessToken(authorizationHeader);
-        SessionUser sessionUser = (SessionUser) httpSession.getAttribute(OAuth2UserCustomService.SESSION_USER_KEY);
+        String token = resolveAccessToken(request);
 
-        if (sessionUser != null) {
-            // 세션 인증으로 변경
-            Authentication authentication = tokenProvider.getAuthentication(sessionUser.getEmail());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (!StringUtils.isNull(token)) {
+            String email = tokenProvider.getSubject(token);
+            try {
+                PrincipalDetail principal = (PrincipalDetail) userDetailService.loadUserByUsername(email);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        principal, token, principal.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (UserNotFoundException ignored) {
+                SecurityContextHolder.clearContext();
+            }
         }
 
         filterChain.doFilter(request, response);
@@ -49,5 +54,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    private String resolveAccessToken(HttpServletRequest request) {
+        String bearerToken = getAccessToken(request.getHeader(HEADER_AUTHORIZATION));
+        if (bearerToken != null && tokenProvider.validToken(bearerToken)) {
+            return bearerToken;
+        }
+
+        return CookieUtil.getCookieValue(request, CookieUtil.ACCESS_TOKEN_COOKIE_NAME)
+                .filter(tokenProvider::validToken)
+                .orElse(null);
     }
 }

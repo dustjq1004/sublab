@@ -1,8 +1,8 @@
 package me.kimyeonsup.home.config.jwt;
 
 import io.jsonwebtoken.Jwts;
-import me.kimyeonsup.home.login.domain.entity.User;
-import me.kimyeonsup.home.login.repository.UserRepository;
+import me.kimyeonsup.home.domain.login.domain.entity.User;
+import me.kimyeonsup.home.domain.login.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,5 +110,19 @@ class TokenProviderTest {
 
         //then
         assertThat(userIdByToken).isEqualTo(userId);
+    }
+
+    @DisplayName("getSubject() : 토큰에서 사용자 이메일을 가져올 수 있다.")
+    @Test
+    void getSubject() {
+        String email = "user@email.com";
+        String token = JwtFactory.builder()
+                .subject(email)
+                .build()
+                .createToken(jwtProperties);
+
+        String subject = tokenProvider.getSubject(token);
+
+        assertThat(subject).isEqualTo(email);
     }
 }
