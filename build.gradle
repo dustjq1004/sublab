@@ -34,11 +34,11 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
     /* common mark dependency*/
-    implementation 'org.commonmark:commonmark-ext-gfm-tables:0.30.0'
-    implementation 'org.commonmark:commonmark:0.30.0'
-    implementation "org.commonmark:commonmark-ext-gfm-strikethrough:0.30.0"
-    implementation "org.commonmark:commonmark-ext-task-list-items:0.30.0"
-    implementation "org.commonmark:commonmark-ext-autolink:0.30.0"
+    implementation 'org.commonmark:commonmark-ext-gfm-tables:0.30.1'
+    implementation 'org.commonmark:commonmark:0.30.1'
+    implementation "org.commonmark:commonmark-ext-gfm-strikethrough:0.30.1"
+    implementation "org.commonmark:commonmark-ext-task-list-items:0.30.1"
+    implementation "org.commonmark:commonmark-ext-autolink:0.30.1"
 
     /* flexmark dependency */
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8' // 최신 버전 사용
